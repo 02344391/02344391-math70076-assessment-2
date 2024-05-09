@@ -1,109 +1,210 @@
-
-
+"""
+The main script to build an explanatory model with specified encoded categorical variables.
+"""
+# Import modules
 import numpy as np
 
-def cat_tree_shap(x, nu, a, b, t, r, d):
+class tree_cat_explainer:
     """
+    Explanatory model derived from a decision tree or random forest model
+    (regressor or classifier). Shap values are computed for feature groups.
+
+    The cat_tree_shap function is heavily influenced by the tree_shap 
+    function within the TreeExplainer class of the pytree.py script 
+    located in shap/explainers/ of the SHAP module, particularly the 
+    recurse, extend, unwind, and sum_unwind functions.
+
+    https://github.com/shap/shap/blob/master/shap/explainers/pytree.py
+
     """
-    phi = np.zeros(len(x))
-    def extend(m, pz, po, pi):
+    def __init__(self, model, feature_groups = None):
         """
+        :param model: tree-based model, random forest (scikit-learn).
+        :type model: sklearn.tree.DecisionTreeRegressor;
+        sklearn.tree.DecisionTreeClassifier;
+        sklearn.ensemble.RandomForestRegressor;
+        sklearn.ensemble.RandomForestClassifier.
+        :param feature_groups: list of indices of the same group.
+        :type feature_groups: list of lists (integer)
         """
-        l = len(m["weight"])
-        m["feature"].append(pi)
-        m["z"].append(pz)
-        m["o"].append(po)
-        m["weight"].append(int(l==0))
-        for i in range(l-1,-1,-1):
-            m["weight"][i+1] += po *  m["weight"][i] * (i+1)/(l+1)
-            m["weight"][i] = pz * m["weight"][i] * (l-i)/(l+1)
-        return m
-    def unwind(m,i):
-        """
-        """
-        l = len(m["weight"])
-        n = m["weight"][l-1]
-        o = m["o"][i]
-        z = m["z"][i]
-        for j in range(l-2,-1,-1):
-            if o != 0:
-                t = m["weight"][j]
-                m["weight"][j] = n * (l) / ((j+1) * o)
-                n = t - m["weight"][j] * z * ((l-1)-j)/l
-            else:
-                m["weight"][j] = (m["weight"][j] * l) / (z * (l-1-j))
-        for j in range(i, l-1):
-            m["feature"][j] = m["feature"][j+1]
-            m["z"][j] = m["z"][j+1]
-            m["o"][j] = m["o"][j+1]
-
-        return m
-    def sum_unwind(m, i):
-        l = len(m["weight"])
-        o = m["o"][i]
-        z = m["z"][i]
-        n = m["weight"][l-1]
-        tot = 0
-        for j in range(l-2, -1, -1):
-            if o != 0:
-                t = n * l/((j+1) * o)
-                tot += t
-                n = m["weight"][j] - t * z * (l-1-j)/(l)
-                # print(f"if: {m['weight'][j]}, {z}, {l-1}, {n}, {t}")
-            else:
-                tot += (m["weight"][j] / z) / ((l - 1 - j) / l)
-                # print(f"else: {m['weight'][j]}, {z}, {l-1}")
-        return tot
-
-
-    def findfirst(md, d_):
-        try:
-            k = np.where(md == d_)[0][0]
-        except:
-            k = None
-        return k
-    def recurse(j, dict_m, pz, po, pi):
-        print(f"node {j}")
-
-        """
-
-        """
-        m = dict_m[f"node {j}"].copy()
-        m = extend(m, pz, po, pi)
-        left = a[j]
-        right = b[j]
-        if right < 0:
-
-            for i in range(1, len(m["weight"])):
-                # print(m)
-                w = sum_unwind(m, i)
-                feature_index = int(m["feature"][i])
-                phi[feature_index] = phi[feature_index] + w * (m["o"][i] - m["z"][i]) * nu[j]
+        # Check model
+        if str(type(model)) == "<class 'sklearn.tree._classes.DecisionTreeRegressor'>":
+            self.rf = False
+            self.classifier = False
+        elif str(type(model)) == "<class 'sklearn.tree._classes.DecisionTreeClassifier'>":
+            self.rf = False
+            self.classifier = True
+        if str(type(model)) == "<class 'sklearn.tree._classes.RandomForestRegressor'>":
+            self.rf = True
+            self.classifier = False
+        elif str(type(model)) == "<class 'sklearn.tree._classes.RandomForestClassifier'>":
+            self.rf = True
+            self.classifier = True
         else:
-            split = x[d[j]] <= t[j]
-            h, c  = (left, right) * split + (right, left) * (1 - split)
-            iz, io = 1, 1
+            raise TypeError("Model type not supported by tree_cat_explainer: " + str(type(model)))
+        # Check if fitted
+        if self.rf:
+            try:
+                self.trees = [model.estimators_[i].tree_ for i in range(model.n_estimators)]
+            except:
+                raise Exception("The model is not fitted")
+        else:
+            try:
+                self.trees = [model.tree_]
+            except:
+                raise Exception("The model is not fitted")
+        # Check if feature_groups is adapted
+        self.feature_groups = feature_groups
+        self.n_features = self.trees[0].n_features
+        if feature_groups != None:
+            if type(feature_groups) != list:
+                raise TypeError("feature_groups must be a list, type(feature_groups): " + str(type(feature_groups)))
+            feature_list = []
+            # Check types
+            for index_group in feature_groups:
+                if type(index_group) == int:
+                    feature_list.append(index_group)
+                elif type(index_group) == list:
+                    for ind in index_group:
+                        if type(ind) == int:
+                            feature_list.append(ind)
+                        else:
+                            raise TypeError("feature_groups must contain integers or lists of integers")
+                else:
+                    raise TypeError("feature_groups must contain integers or lists of integers")
+                # Check number of features
+                feature_list = list(dict.fromkeys(feature_list))
+                if len(feature_list) != self.n_features:
+                    raise Exception("Wrong number of features in feature_groups")
+                if (max(feature_list) != self.n_features - 1) or (min(feature_list) != 0):
+                    raise Exception("Wrong feature indices in feature_groups")
+        # Transform list of values (output of each leaf)
+        self.trees_value = []
+        for tree in self.trees:
+            if self.classifier:
+                # Normalise values to obtain probabilities for each leaf (classification)
+                self.trees_value.append(tree.value[:,0]/tree.value[:,0].sum(axis = 1).reshape(tree.node_count,1))
+            else :
+                # Flatten vector of values for regression
+                self.trees_value.append(tree.value.flatten())
+    # 
+    def shap_values(self, x):
+        """
+        """
+        if self.feature_groups == None:
+            if self.classifier:
+                phi = np.zeros(len(x), self.trees_value[0].shape[1])
+            else:
+                phi = np.zeros(len(x))
+        else:
+            if self.classifier:
+                phi = np.zeros(len(self.feature_groups), self.trees_value[0].shape[1])
+            else:
+                phi = np.zeros(len(self.feature_groups))
+        for ind_tree, tree in self.trees:
+            maxd = tree.max_depth + 2
+            s = (maxd * (maxd + 1)) // 2
+            node_features = tree.features
+            children_left = tree.children_left
+            children_right = tree.children_right
+            node_thresholds = tree.threshold
+            node_fraction = tree.weighted_n_node_samples
+            def extend(m, pz, po, pi, l):
+                """
+                """
+                m["feature"][l] = pi
+                m["z"][l] = pz
+                m["o"][l] = po
+                m["weight"][l] = int(l==0)
+                for i in range(l-1,-1,-1):
+                    m["weight"][i+1] += po *  m["weight"][i] * (i + 1) / (l + 1)
+                    m["weight"][i] = pz * m["weight"][i] * (l - i)/(l + 1)
+            def unwind(m, i, l):
+                """
+                """
+                n = m["weight"][l]
+                i = int(i)
+                o = m["o"][i]
+                z = m["z"][i]
+                for j in range(l-1,-1,-1):
+                    if o != 0:
+                        t = m["weight"][j]
+                        m["weight"][j] = n * (l + 1) / ((j + 1) * o)
+                        n = t - m["weight"][j] * z * (l - j)/ (l + 1)
+                    else:
+                        m["weight"][j] = (m["weight"][j] * (l + 1)) / (z * (l - j))
+                for j in range(i, l):
+                    m["feature"][j] = m["feature"][j+1]
+                    m["z"][j] = m["z"][j+1]
+                    m["o"][j] = m["o"][j+1]
 
-            k = findfirst(np.array(m["feature"]), d[j])
-            if k != None:
-                iz, io = m["z"][k], m["o"][k]
-                m = unwind(m,k)
-            dict_m[f"node {h}"] = {"weight": [],
-                                  "z": [],
-                                  "o": [],
-                                  "feature": []}
-            dict_m[f"node {c}"] = {"weight": [],
-                                  "z": [],
-                                  "o": [],
-                                  "feature": []}
-            for key in dict_m[f"node {j}"]:
-                dict_m[f"node {h}"][key] = m[key].copy()
-                dict_m[f"node {c}"][key] = m[key].copy()
-            print(dict_m)
-            recurse(h, dict_m, iz * r[h]/r[j], io, d[j])
-            recurse(c, dict_m, iz * r[c]/r[j], 0, d[j])
-    recurse(0, {"node 0": {"weight": [],
-                "z": [],
-                "o": [],
-                "feature": []}}, 1, 1, 0)
-    return phi
+            def sum_unwind(m, i, l):
+                o = m["o"][i]
+                z = m["z"][i]
+                n = m["weight"][l]
+                tot = 0
+                for j in range(l - 1, -1, -1):
+                    if o != 0:
+                        t = n * (l+1)/((j+1) * o)
+                        tot += t
+                        n = m["weight"][j] - t * z * (l - j) / (l + 1)
+                    else:
+                        tot += (m["weight"][j] / z) / ((l - j) / (l + 1))
+                return tot
+            
+            def recurse(j, node_path, pz, po, pi, l, parent):
+
+                """
+
+                """
+                node_path[f"node {j}"] = {}
+                for key in node_path[f"node {parent}"]:
+                    node_path[f"node {j}"][key] = node_path[f"node {parent}"][key][l + 1:]
+                    node_path[f"node {j}"][key][:l + 1] = node_path[f"node {parent}"][key][:l + 1]
+
+                extend(node_path[f"node {j}"], pz, po, pi, l)
+                left = children_left[j]
+                right = children_right[j]
+                if right < 0:
+                    for i in range(1, l+1):
+                        w = sum_unwind(node_path[f"node {j}"], i, l)
+                        if self.feature_groups == None: 
+                            feature_index = int(node_path[f"node {j}"]["feature"][i])
+                            phi[feature_index] += w * (node_path[f"node {j}"]["o"][i] - node_path[f"node {j}"]["z"][i]) * self.trees_value[ind_tree][j]
+                        else:
+                            for group_index, group in enumerate(self.feature_groups):
+                                if node_path[f"node {j}"]["feature"][i] in group:
+                                    break
+                            phi[group_index] +=  w * (node_path[f"node {j}"]["o"][i] - node_path[f"node {j}"]["z"][i]) * self.trees_value[ind_tree][j]
+
+                else:
+                    split = x[node_features[j]] <= node_thresholds[j]
+                    h, c  = (left, right) * split + (right, left) * (1 - split)
+                    iz, io = 1, 1
+
+                    k = 0
+                    if self.feature_groups == None:
+                        while (k <= l): 
+                            if node_path[f"node {j}"]["feature"][k] == node_features[j]:
+                                break
+                            k += 1
+                    else:
+                        for group_index, group in enumerate(self.feature_groups):
+                            if node_features[j] in group:
+                                break
+                        while (k <= l):
+                            if node_path[f"node {j}"]["feature"][k] in self.feature_groups[group_index]:
+                                break
+                            k += 1
+                    if k != l + 1:
+                        iz, io = node_path[f"node {j}"]["z"][k], node_path[f"node {j}"]["o"][k]
+                        unwind(node_path[f"node {j}"], k, l)
+                        l -= 1
+
+                    recurse(h, node_path, iz * node_fraction[h]/node_fraction[j], io, node_features[j], l + 1, j)
+                    recurse(c, node_path, iz * node_fraction[c]/node_fraction[j], 0, node_features[j], l + 1, j)
+            recurse(0, {"node -1": {"weight": np.zeros(s),
+                        "z": np.zeros(s),
+                        "o": np.zeros(s),
+                        "feature": np.zeros(s)}}, 1, 1, -1, l = 0, parent = -1)
+            return phi

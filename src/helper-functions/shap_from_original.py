@@ -9,9 +9,11 @@ class TreeExplainer:
 
         if str(type(model)).endswith("sklearn.ensemble.forest.RandomForestRegressor'>"):
             self.trees = [Tree(e.tree_) for e in model.estimators_]
-        elif str(type(model)).endswith("sklearn.ensemble.forest.RandomForestClassifier'>"):
+        elif str(type(model)).endswith("sklearn.ensemble._forest.RandomForestClassifier'>"):
             self.trees = [Tree(e.tree_, normalize=True) for e in model.estimators_]
         elif str(type(model)).endswith("sklearn.tree._classes.DecisionTreeRegressor'>"): # New
+            self.trees = [Tree(model.tree_)] # New
+        elif str(type(model)).endswith("sklearn.tree._classes.DecisionTreeClassifier'>"): # New
             self.trees = [Tree(model.tree_)] # New
         elif str(type(model)).endswith("xgboost.core.Booster'>"):
             self.model_type = "xgboost"
@@ -196,20 +198,20 @@ def tree_shap_recursive(children_left, children_right, children_default, feature
     # stop if we have no weight coming down to us
 
     # extend the unique path
+
     feature_indexes = parent_feature_indexes[unique_depth + 1:]
     feature_indexes[:unique_depth + 1] = parent_feature_indexes[:unique_depth + 1]
+
     zero_fractions = parent_zero_fractions[unique_depth + 1:]
     zero_fractions[:unique_depth + 1] = parent_zero_fractions[:unique_depth + 1]
     one_fractions = parent_one_fractions[unique_depth + 1:]
     one_fractions[:unique_depth + 1] = parent_one_fractions[:unique_depth + 1]
     pweights = parent_pweights[unique_depth + 1:]
     pweights[:unique_depth + 1] = parent_pweights[:unique_depth + 1]
-
     extend_path(
             feature_indexes, zero_fractions, one_fractions, pweights,
             unique_depth, parent_zero_fraction, parent_one_fraction, parent_feature_index
         )
-
     split_index = features[node_index]
 
     # leaf node
@@ -224,7 +226,6 @@ def tree_shap_recursive(children_left, children_right, children_default, feature
                     if feature_indexes[i] in group: # new
                         break # new
                 phi[group_index,:] += w * (one_fractions[i] - zero_fractions[i]) * values[node_index,:] # new
-
 
 
     # internal node
