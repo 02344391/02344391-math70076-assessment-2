@@ -54,30 +54,35 @@ class tree_cat_explainer:
             except:
                 raise Exception("The model is not fitted")
         # Check if feature_groups is adapted
-        self.feature_groups = feature_groups
+
         self.n_features = self.trees[0].n_features
-        if feature_groups != None:
+        if feature_groups == None:
+            self.feature_groups = None
+        else:
             if type(feature_groups) != list:
                 raise TypeError("feature_groups must be a list, type(feature_groups): " + str(type(feature_groups)))
             feature_list = []
             # Check types
+            self.feature_groups = []
             for index_group in feature_groups:
                 if type(index_group) == int:
                     feature_list.append(index_group)
+                    self.feature_groups.append([index_group])
                 elif type(index_group) == list:
                     for ind in index_group:
                         if type(ind) == int:
                             feature_list.append(ind)
                         else:
                             raise TypeError("feature_groups must contain integers or lists of integers")
+                    self.feature_groups.append(index_group)
                 else:
                     raise TypeError("feature_groups must contain integers or lists of integers")
-                # Check number of features
-                feature_list = list(dict.fromkeys(feature_list))
-                if len(feature_list) != self.n_features:
-                    raise Exception("Wrong number of features in feature_groups")
-                if (max(feature_list) != self.n_features - 1) or (min(feature_list) != 0):
-                    raise Exception("Wrong feature indices in feature_groups")
+            # Check number of features
+            feature_list = list(dict.fromkeys(feature_list))
+            if len(feature_list) != self.n_features:
+                raise Exception("Wrong number of features in feature_groups")
+            if (max(feature_list) != self.n_features - 1) or (min(feature_list) != 0):
+                raise Exception("Wrong feature indices in feature_groups")
         # Transform list of values (output of each leaf)
         self.trees_value = []
         for tree in self.trees:
