@@ -132,23 +132,30 @@ class tree_cat_explainer:
                 children_right = tree.children_right
                 node_thresholds = tree.threshold
                 node_fraction = tree.weighted_n_node_samples
+                # Tree shap algorithm 
+                # Consistent Individualized Feature Attribution for Tree Ensembles
+                # page 4
+                # Author: Scott M. Lundberg, Gabriel G. Erion, and Su-In Lee
                 def extend(m, pz, po, pi, l):
                     """
+                    Grow subsets of features from a given node according to a given fraction
+                    of ones and zeros.
                     """
                     m["feature"][l] = pi
-                    m["z"][l] = pz
-                    m["o"][l] = po
+                    m["zero"][l] = pz
+                    m["one"][l] = po
                     m["weight"][l] = int(l==0)
                     for i in range(l-1,-1,-1):
                         m["weight"][i+1] += po *  m["weight"][i] * (i + 1) / (l + 1)
                         m["weight"][i] = pz * m["weight"][i] * (l - i)/(l + 1)
                 def unwind(m, i, l):
                     """
+                    Reverse extend procedure
                     """
                     n = m["weight"][l]
                     i = int(i)
-                    o = m["o"][i]
-                    z = m["z"][i]
+                    o = m["one"][i]
+                    z = m["zero"][i]
                     for j in range(l-1,-1,-1):
                         if o != 0:
                             t = m["weight"][j]
@@ -158,12 +165,12 @@ class tree_cat_explainer:
                             m["weight"][j] = (m["weight"][j] * (l + 1)) / (z * (l - j))
                     for j in range(i, l):
                         m["feature"][j] = m["feature"][j+1]
-                        m["z"][j] = m["z"][j+1]
-                        m["o"][j] = m["o"][j+1]
+                        m["zero"][j] = m["zero"][j+1]
+                        m["one"][j] = m["one"][j+1]
 
                 def sum_unwind(m, i, l):
-                    o = m["o"][i]
-                    z = m["z"][i]
+                    o = m["one"][i]
+                    z = m["zero"][i]
                     n = m["weight"][l]
                     tot = 0
                     for j in range(l - 1, -1, -1):
@@ -176,7 +183,6 @@ class tree_cat_explainer:
                     return tot
                 
                 def recurse(j, node_path, pz, po, pi, l, parent):
-
                     """
 
                     """
@@ -193,12 +199,12 @@ class tree_cat_explainer:
                             w = sum_unwind(node_path[f"node {j}"], i, l)
                             if self.feature_groups == None: 
                                 feature_index = int(node_path[f"node {j}"]["feature"][i])
-                                phi[input_index][feature_index] += (1 / nb_trees) * w * (node_path[f"node {j}"]["o"][i] - node_path[f"node {j}"]["z"][i]) * self.trees_value[ind_tree][j]
+                                phi[input_index][feature_index] += (1 / nb_trees) * w * (node_path[f"node {j}"]["one"][i] - node_path[f"node {j}"]["zero"][i]) * self.trees_value[ind_tree][j]
                             else:
                                 for group_index, group in enumerate(self.feature_groups):
                                     if node_path[f"node {j}"]["feature"][i] in group:
                                         break
-                                phi[input_index][group_index] += (1 / nb_trees) * w * (node_path[f"node {j}"]["o"][i] - node_path[f"node {j}"]["z"][i]) * self.trees_value[ind_tree][j]
+                                phi[input_index][group_index] += (1 / nb_trees) * w * (node_path[f"node {j}"]["one"][i] - node_path[f"node {j}"]["zero"][i]) * self.trees_value[ind_tree][j]
 
                     else:
                         split = x[node_features[j]] <= node_thresholds[j]
@@ -220,15 +226,15 @@ class tree_cat_explainer:
                                     break
                                 k += 1
                         if k != l + 1:
-                            iz, io = node_path[f"node {j}"]["z"][k], node_path[f"node {j}"]["o"][k]
+                            iz, io = node_path[f"node {j}"]["zero"][k], node_path[f"node {j}"]["one"][k]
                             unwind(node_path[f"node {j}"], k, l)
                             l -= 1
 
                         recurse(h, node_path, iz * node_fraction[h]/node_fraction[j], io, node_features[j], l + 1, j)
                         recurse(c, node_path, iz * node_fraction[c]/node_fraction[j], 0, node_features[j], l + 1, j)
                 recurse(0, {"node -1": {"weight": np.zeros(s),
-                            "z": np.zeros(s),
-                            "o": np.zeros(s),
+                            "zero": np.zeros(s),
+                            "one": np.zeros(s),
                             "feature": np.zeros(s)}}, 1, 1, -1, l = 0, parent = -1)
         if phi.shape[0] == 1:
             return phi[0]
