@@ -140,6 +140,16 @@ class tree_cat_explainer:
                     """
                     Grow subsets of features from a given node according to a given fraction
                     of ones and zeros.
+                    :param m: unique path of a given node
+                    :type m: dicts with keys 'weigth','zero','one','feature'
+                    :param pz: proportion of "zero" paths (where the feature is not in the considered set of features)
+                    :type pz: float
+                    :param po: proportion of "one" paths (where the feature is in the considered set of features)
+                    :type po: float
+                    :param pi: index of the parent split feature 
+                    :type pi: int
+                    :param l: current depth of the node
+                    :type l: int
                     """
                     m["feature"][l] = pi
                     m["zero"][l] = pz
@@ -150,7 +160,13 @@ class tree_cat_explainer:
                         m["weight"][i] = pz * m["weight"][i] * (l - i)/(l + 1)
                 def unwind(m, i, l):
                     """
-                    Reverse extend procedure
+                    Reverse extend procedure when algorithm splits on the same feature twice
+                    :param m: unique path of a given node
+                    :type m: dicts with keys 'weigth','zero','one','feature'
+                    :param i: depth of the node where to undo extension
+                    :type i: int 
+                    :param l: current depth of the algorithm
+                    :type l: int
                     """
                     n = m["weight"][l]
                     i = int(i)
@@ -169,6 +185,16 @@ class tree_cat_explainer:
                         m["one"][j] = m["one"][j+1]
 
                 def sum_unwind(m, i, l):
+                    """
+                    Undo each extension of the path inside a leaf to compute weights for each
+                    feature in the path
+                    :param m: unique path of a given node
+                    :type m: dicts with keys 'weigth','zero','one','feature'
+                    :param i: depth of the node where to undo extension
+                    :type i: int 
+                    :param l: current depth of the algorithm
+                    :type l: int
+                    """
                     o = m["one"][i]
                     z = m["zero"][i]
                     n = m["weight"][l]
@@ -184,7 +210,22 @@ class tree_cat_explainer:
                 
                 def recurse(j, node_path, pz, po, pi, l, parent):
                     """
-
+                    Update shap values when algorithm encouters a leaf, or update weights given the features
+                    when it is an internal node.
+                    :param j: current node the algorithm passes through
+                    :type j: integer
+                    :param node_path: dictionary of all the previous unique paths for every node
+                    :type node_path: dict of dicts with keys 'weigth','zero','one','feature'
+                    :param pz: proportion of "zero" paths (where the feature is not in the considered set)
+                    :type pz: float
+                    :param po: proportion of "one" paths (where the feature is in the considered set)
+                    :type po: float
+                    :param pi: index of the parent split feature 
+                    :type pi: integer
+                    :param l: current depth of the algorithm (of the node the algorithm passes through)
+                    :type l: integer
+                    :param parent: parent node
+                    :type parent: integer
                     """
                     node_path[f"node {j}"] = {}
                     for key in node_path[f"node {parent}"]:
