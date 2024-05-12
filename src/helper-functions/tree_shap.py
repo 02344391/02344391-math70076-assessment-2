@@ -3,7 +3,7 @@ The main script to build an explanatory model with specified encoded categorical
 """
 # Import modules
 import numpy as np
-
+# Main class
 class tree_cat_explainer:
     """
     Explanatory model derived from a decision tree or random forest model
@@ -54,7 +54,6 @@ class tree_cat_explainer:
             except:
                 raise Exception("The model is not fitted")
         # Check if feature_groups is adapted
-
         self.n_features = self.trees[0].n_features
         if feature_groups == None:
             self.feature_groups = None
@@ -183,7 +182,6 @@ class tree_cat_explainer:
                         m["feature"][j] = m["feature"][j+1]
                         m["zero"][j] = m["zero"][j+1]
                         m["one"][j] = m["one"][j+1]
-
                 def sum_unwind(m, i, l):
                     """
                     Undo each extension of the path inside a leaf to compute weights for each
@@ -207,7 +205,6 @@ class tree_cat_explainer:
                         else:
                             tot += (m["weight"][j] / z) / ((l - j) / (l + 1))
                     return tot
-                
                 def recurse(j, node_path, pz, po, pi, l, parent):
                     """
                     Update shap values when algorithm encouters a leaf, or update weights given the features
@@ -231,7 +228,6 @@ class tree_cat_explainer:
                     for key in node_path[f"node {parent}"]:
                         node_path[f"node {j}"][key] = node_path[f"node {parent}"][key][l + 1:]
                         node_path[f"node {j}"][key][:l + 1] = node_path[f"node {parent}"][key][:l + 1]
-
                     extend(node_path[f"node {j}"], pz, po, pi, l)
                     left = children_left[j]
                     right = children_right[j]
@@ -246,7 +242,6 @@ class tree_cat_explainer:
                                     if node_path[f"node {j}"]["feature"][i] in group:
                                         break
                                 phi[input_index][group_index] += (1 / nb_trees) * w * (node_path[f"node {j}"]["one"][i] - node_path[f"node {j}"]["zero"][i]) * self.trees_value[ind_tree][j]
-
                     else:
                         split = x[node_features[j]] <= node_thresholds[j]
                         h, c  = (left, right) * split + (right, left) * (1 - split)
@@ -270,7 +265,6 @@ class tree_cat_explainer:
                             iz, io = node_path[f"node {j}"]["zero"][k], node_path[f"node {j}"]["one"][k]
                             unwind(node_path[f"node {j}"], k, l)
                             l -= 1
-
                         recurse(h, node_path, iz * node_fraction[h]/node_fraction[j], io, node_features[j], l + 1, j)
                         recurse(c, node_path, iz * node_fraction[c]/node_fraction[j], 0, node_features[j], l + 1, j)
                 recurse(0, {"node -1": {"weight": np.zeros(s),
