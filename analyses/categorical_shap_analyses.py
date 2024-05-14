@@ -12,18 +12,62 @@ import pickle
 import numpy as np
 import pandas as pd
 import shap
+import matplotlib.pyplot as plt
 from sklearn.datasets import make_classification, make_regression
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, mean_absolute_error
 # Import scripts
 sys.path.append(os.path.abspath("../src/helper-functions"))
 import tree_shap
 import create_categories
+import plot_tree_path
 
 ###############################################################################
 # Toy example
 ###############################################################################
+"""
+A very simple decision tree to exhibit a difference according to the way of 
+calculating the SHAP values.
+"""
+# Construct simple dataset 
+target = [-10] * 10 + [10] * 5 + [5] * 20 + [14] * 5
+cat_1 = [1] * 10 + [0] * 30
+x = [60] * 5 + [45] * 30 +  [50] * 5
+cat_2 = [1] * 15 + [0] * 25
+data = pd.DataFrame({"cat_1": cat_1,
+                     "cat_2": cat_2,
+                     "x": x,
+                     "target": target})
+# Build model
+Tree = DecisionTreeRegressor()
+Tree.fit(data.values[:,:-1], data.values[:,-1])
+
+input_shap = [0,1,60] # Analyse input
+# Plot tree path of input knowing 0, 1, 2 and 3 features
+## 0 known feature
+fig, ax = plt.subplots(1, figsize = (4,5))
+plot_tree_path.plot_tree_color(ax, Tree, input_shap, data.columns[:-1], [])
+plt.savefig(os.path.abspath("../outputs/plot_tree/figures/path_0_known.pdf"))
+## 1 known feature
+fig, ax = plt.subplots(1,3, figsize = (12,5))
+plot_tree_path.plot_tree_color(ax[0], Tree, input_shap, data.columns[:-1], [0])
+plot_tree_path.plot_tree_color(ax[1], Tree, input_shap, data.columns[:-1], [1])
+plot_tree_path.plot_tree_color(ax[2], Tree, input_shap, data.columns[:-1], [2])
+# plot_tree_path.plot_tree_color(ax, Tree, input_shap, data.columns[:-1], [0,1])
+plt.savefig(os.path.abspath("../outputs/plot_tree/figures/path_1_known.pdf"))
+## 2 known features
+fig, ax = plt.subplots(1,3, figsize = (12,5))
+plot_tree_path.plot_tree_color(ax[0], Tree, input_shap, data.columns[:-1], [0,1])
+plot_tree_path.plot_tree_color(ax[1], Tree, input_shap, data.columns[:-1], [1,2])
+plot_tree_path.plot_tree_color(ax[2], Tree, input_shap, data.columns[:-1], [0,2])
+plt.savefig(os.path.abspath("../outputs/plot_tree/figures/path_2_known.pdf"))
+
+## 3 known features
+fig, ax = plt.subplots(1, figsize = (4,5))
+plot_tree_path.plot_tree_color(ax, Tree, input_shap, data.columns[:-1], [0,1,2])
+plt.savefig(os.path.abspath("../outputs/plot_tree/figures/path_3_known.pdf"))
 
 ###############################################################################
 # Build datasets and compare both methods of computing SHAP values
