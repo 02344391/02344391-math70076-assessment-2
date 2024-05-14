@@ -1,17 +1,18 @@
 # Fdb version 4
-["bibtex categorical_shap_values"] 1715708781.96099 "categorical_shap_values.aux" "categorical_shap_values.bbl" "categorical_shap_values" 1715709806.09407 0
+["bibtex categorical_shap_values"] 1715725920.35642 "categorical_shap_values.aux" "categorical_shap_values.bbl" "categorical_shap_values" 1715725923.18947 0
   "./bibliography.bib" 1715535367 787 e5ef81c1884ee05a5203a598666399f8 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/bibtex/bst/natbib/abbrvnat.bst" 1284455456 26532 66bed5cc59495faaa3f9ae9af9fa5e42 ""
-  "categorical_shap_values.aux" 1715709805 2961 0d6ea276561ab0ded1bd75082a638ea9 "pdflatex"
+  "categorical_shap_values.aux" 1715725922 4584 486050cee177d39a0ef525b9ac6918c9 "pdflatex"
   (generated)
   "categorical_shap_values.bbl"
   "categorical_shap_values.blg"
   (rewritten before read)
-["pdflatex"] 1715709803.86771 "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" "categorical_shap_values.pdf" "categorical_shap_values" 1715709806.09497 0
-  "../outputs/plot_tree/figures/path_0_known.pdf" 1715696320 14184 aa5a806903bb9949a50fedd8d7900548 ""
-  "../outputs/plot_tree/figures/path_1_known.pdf" 1715696320 16835 71b0f6a56cab9fc53defc82944add55d ""
-  "../outputs/plot_tree/figures/path_2_known.pdf" 1715696320 16796 065568970442a5c9c7bdb6cee039eb55 ""
-  "../outputs/plot_tree/figures/path_3_known.pdf" 1715696320 14308 97397b0cd5a555f65457a741ccc8d8db ""
+["pdflatex"] 1715725920.75908 "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" "categorical_shap_values.pdf" "categorical_shap_values" 1715725923.19129 0
+  "../outputs/comparison-shap/figures/boxplots.pdf" 1715725215 68730 77a229ba0a59b82da20af5768ec969bd ""
+  "../outputs/plot_tree/figures/path_0_known.pdf" 1715725212 14184 111cb03ac655a2cd2f5678cfc1560fb5 ""
+  "../outputs/plot_tree/figures/path_1_known.pdf" 1715725212 16835 d58682147ca6444f166f0650e65003ff ""
+  "../outputs/plot_tree/figures/path_2_known.pdf" 1715725212 16796 568169ad671c99ef9d240398efb1abd0 ""
+  "../outputs/plot_tree/figures/path_3_known.pdf" 1715725212 14308 574615835b239157039759174cce4e98 ""
   "C:/Users/quent/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1710018939 278015 b5ae8789d05c9394f564dcef5be6e51a ""
   "C:/Users/quent/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1706523915 24175184 e58035b8cd87e14ca5d45a178ad8a3fb ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm" 1233951848 1124 14ccf5552bc7f77ca02a8a402bea8bfb ""
@@ -141,11 +142,11 @@
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/latex/tools/verbatim.sty" 1686255640 7392 ed69c044ab18d5539723c1c7b8c2ee88 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1656236890 56148 51a9a8571c07b9921892ae11063ae853 ""
-  "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" 1715709802 8043 a7733c0b9a03d9143196ec9e9b909696 ""
-  "categorical_shap_values.aux" 1715709805 2961 0d6ea276561ab0ded1bd75082a638ea9 "pdflatex"
-  "categorical_shap_values.bbl" 1715708782 497 a16fccc2eeff45f74f65fa344c5342b8 "bibtex categorical_shap_values"
-  "categorical_shap_values.out" 1715709804 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "categorical_shap_values.tex" 1715709802 8043 a7733c0b9a03d9143196ec9e9b909696 ""
+  "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" 1715725916 13470 27dc3845fd375a28f466611a617f04be ""
+  "categorical_shap_values.aux" 1715725922 4584 486050cee177d39a0ef525b9ac6918c9 "pdflatex"
+  "categorical_shap_values.bbl" 1715725920 1071 12aa4c531041fb79e818be88ac8a2292 "bibtex categorical_shap_values"
+  "categorical_shap_values.out" 1715725921 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "categorical_shap_values.tex" 1715725916 13470 27dc3845fd375a28f466611a617f04be ""
   (generated)
   "categorical_shap_values.aux"
   "categorical_shap_values.log"

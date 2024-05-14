@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2024.1.29)  14 MAY 2024 19:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2024.1.29)  14 MAY 2024 23:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -558,28 +558,34 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {C:/Users/quent/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-<../outputs/plot_tree/figures/path_0_known.pdf, id=29, 289.08pt x 361.35pt>
+<../outputs/plot_tree/figures/path_0_known.pdf, id=34, 289.08pt x 361.35pt>
 File: ../outputs/plot_tree/figures/path_0_known.pdf Graphic file (type pdf)
 <use ../outputs/plot_tree/figures/path_0_known.pdf>
-Package pdftex.def Info: ../outputs/plot_tree/figures/path_0_known.pdf  used on input line 100.
+Package pdftex.def Info: ../outputs/plot_tree/figures/path_0_known.pdf  used on input line 103.
 (pdftex.def)             Requested size: 204.86006pt x 256.0748pt.
-<../outputs/plot_tree/figures/path_1_known.pdf, id=32, 867.24pt x 361.35pt>
+<../outputs/plot_tree/figures/path_1_known.pdf, id=37, 867.24pt x 361.35pt>
 File: ../outputs/plot_tree/figures/path_1_known.pdf Graphic file (type pdf)
 <use ../outputs/plot_tree/figures/path_1_known.pdf>
-Package pdftex.def Info: ../outputs/plot_tree/figures/path_1_known.pdf  used on input line 122.
+Package pdftex.def Info: ../outputs/plot_tree/figures/path_1_known.pdf  used on input line 125.
 (pdftex.def)             Requested size: 450.68951pt x 187.78836pt.
  [2 <../outputs/plot_tree/figures/path_0_known.pdf>]
-<../outputs/plot_tree/figures/path_2_known.pdf, id=86, 867.24pt x 361.35pt>
+<../outputs/plot_tree/figures/path_2_known.pdf, id=91, 867.24pt x 361.35pt>
 File: ../outputs/plot_tree/figures/path_2_known.pdf Graphic file (type pdf)
 <use ../outputs/plot_tree/figures/path_2_known.pdf>
-Package pdftex.def Info: ../outputs/plot_tree/figures/path_2_known.pdf  used on input line 139.
+Package pdftex.def Info: ../outputs/plot_tree/figures/path_2_known.pdf  used on input line 142.
 (pdftex.def)             Requested size: 450.68951pt x 187.78836pt.
-<../outputs/plot_tree/figures/path_3_known.pdf, id=88, 289.08pt x 361.35pt>
+<../outputs/plot_tree/figures/path_3_known.pdf, id=93, 289.08pt x 361.35pt>
 File: ../outputs/plot_tree/figures/path_3_known.pdf Graphic file (type pdf)
 <use ../outputs/plot_tree/figures/path_3_known.pdf>
-Package pdftex.def Info: ../outputs/plot_tree/figures/path_3_known.pdf  used on input line 155.
+Package pdftex.def Info: ../outputs/plot_tree/figures/path_3_known.pdf  used on input line 157.
 (pdftex.def)             Requested size: 204.86006pt x 256.0748pt.
- [3 <../outputs/plot_tree/figures/path_1_known.pdf> <../outputs/plot_tree/figures/path_2_known.pdf>] [4 <../outputs/plot_tree/figures/path_3_known.pdf>] (categorical_shap_values.bbl) [5] (categorical_shap_values.aux)
+ [3 <../outputs/plot_tree/figures/path_1_known.pdf> <../outputs/plot_tree/figures/path_2_known.pdf>] [4 <../outputs/plot_tree/figures/path_3_known.pdf>]
+<../outputs/comparison-shap/figures/boxplots.pdf, id=243, 722.7pt x 867.24pt>
+File: ../outputs/comparison-shap/figures/boxplots.pdf Graphic file (type pdf)
+<use ../outputs/comparison-shap/figures/boxplots.pdf>
+Package pdftex.def Info: ../outputs/comparison-shap/figures/boxplots.pdf  used on input line 238.
+(pdftex.def)             Requested size: 355.65892pt x 426.79134pt.
+ [5] [6 <../outputs/comparison-shap/figures/boxplots.pdf>] (categorical_shap_values.bbl) [7] (categorical_shap_values.aux)
  ***********
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-10>
@@ -588,17 +594,17 @@ Package rerunfilecheck Info: File `categorical_shap_values.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 15747 strings out of 474824
- 248534 string characters out of 5750977
- 1935043 words of memory out of 5000000
- 37451 multiletter control sequences out of 15000+600000
+ 15774 strings out of 474824
+ 249301 string characters out of 5750977
+ 1936043 words of memory out of 5000000
+ 37471 multiletter control sequences out of 15000+600000
  569370 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,680b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,680b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on categorical_shap_values.pdf (5 pages, 230405 bytes).
+Output written on categorical_shap_values.pdf (7 pages, 315724 bytes).
 PDF statistics:
- 299 PDF objects out of 1000 (max. 8388607)
- 15 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 487 PDF objects out of 1000 (max. 8388607)
+ 22 named destinations out of 1000 (max. 500000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

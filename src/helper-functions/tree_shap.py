@@ -353,7 +353,7 @@ def normalise_absolute_shap_value(shap_values, n_decimals = 3):
     """
     if len(shap_values.shape) != 2:
         raise Exception("shap_values must be a 2D-array")
-    return (abs(shap_values).T/abs(shap_values).sum(axis = 1).T).round(n_decimals)
+    return ((abs(shap_values).T/abs(shap_values).sum(axis = 1)).T).round(n_decimals)
 
 # Bar plot of mean values.
 def bar_plot(abs_shap_values, ax, max_features = 10, feature_names = None, n_decimals = 3):

@@ -86,7 +86,10 @@ categorical variable are independent. This assumption is inherently false: the e
 be considered as a whole when calculating the Shap values using the fitted trees.
 
 The goal of this project is to modify the algorithm calculating the SHAP values of \\ \texttt{TreeExplainer} to consider 
-the entire set of sub-variables of a categorical variable as known when it is part of $S$.
+the entire set of sub-variables of a categorical variable as known when it is part of $S$. Moreover, this project 
+heavily relies on functions from \href{https://scikit-learn.org/stable/}{Scikit-learn} (\cite{scikit-learn}), some of which are modified 
+(e.g. \texttt{sklearn.tree.plot\_tree}) or not, for visualizations, dataset construction, or machine learning model construction.
+this project 
 
 \section*{A simple example of a regression tree}
 
@@ -149,7 +152,6 @@ $$S = \{\text{cat}_1, \text{cat}_2, x\}.$$
 We find that 
 $$f_u(\{\text{cat}_1, \text{cat}_2, x\}) = 14$$
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[height=9cm]{"../outputs/plot_tree/figures/path_3_known.pdf"}
@@ -176,6 +178,93 @@ a set cat of cardinality 1 and are inseparable, the SHAP values become:
 We observe that $\phi_{\text{cat}} \neq  \phi_{\text{cat}_1}+\phi_{\text{cat}_2} $ and 
 $\phi_x \neq  \phi_x'$. However, the values are quite close. Next, we will 
 compare these two methods for different datasets to see if they lead to similar results.
+
+\section*{Comparison of the two methods with generated datasets}
+
+In order to compare the two methods, we modify the algorithm 2 Tree SHAP on page 4 of \cite{lundberg2019consistent}. 
+This is a recursive algorithm that performs the calculations we have previously 
+shown, in an optimal way without repeating values already calculated. In particular, we modify in the 
+\texttt{RECURSE} procedure, the \texttt{FINDFIRST} function, which becomes a function searching for the first 
+occurrence of any member of the feature group of the considered feature. We were inspired by the code in 
+\href{https://github.com/shap/shap/blob/master/shap/explainers/_tree.py}{\_tree.py} to code our own version.
+
+We also need to generate new datasets with categorical variables. Since all the algorithms are coded in \textit{Python}, 
+the computation times are much longer than the original \textit{C++} algorithm. Therefore, we need to limit the size of 
+the datasets and the number of trees in our predictive models.
+
+To generate datasets, we use the functions \texttt{make\_classification} or \texttt{make\_regression} from
+\texttt{sklearn.datasets}. These functions only provide numerical features. Therefore, we need to artificially 
+transform numerical features into categorical variables by associating each value with a category based on its 
+quantile. A random component is added to introduce errors in the category assignment.
+
+In total, 120 datasets are generated (60 for binary classification and 60 for regression). They consist of 7 
+features with 5 informative features. Among the datasets, we construct 1, 3, or 5 categorical variables in a 
+balanced manner. All categorical variables contain 4 categories. The models used are random forest models with 
+20 decision trees. The train/test ratio is 0.2.
+
+The performance of the classification models are all acceptable, as reported in table \ref{table:perfo}. On the other hand, 
+the regression models underperform. Therefore, we decide not to study the SHAP values of these models because 
+it is not relevant to explain predictions of a model that does not perform well.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cccc}
+      \midrule
+      & 1 categorical feature & 3 categorical features & 5 categorical features \\
+      Accuracy & 0.82 & 0.81 & 0.75 \\
+      Precision & 0.86 & 0.84 & 0.80 \\
+      Recall & 0.81 & 0.79 & 0.71 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Average performance of the classification models for datasets containing 
+    1, 3, 5 categorical features.}
+    \label{table:perfo}
+  \end{table}
+
+Since transforming into categories causes a loss of precision in numerical variables, 
+it is normal for performance to decrease as the number of categorical variables increases 
+for the same total number of features.
+
+For each of the datasets, we normalise the absolute values of the SHAP values so that the 
+absolute values of the SHAP values for each prediction sum up to 1.
+
+Then, we construct boxplots in figure \ref{fig:boxplot} to show the distribution of the mean differences of the 
+normalized SHAP values calculated by the two methods for each prediction. We observe that the mean differences 
+are very small for the most part. Indeed, in the most extreme cases, they barely exceed 3\%. This shows that 
+the two methods seem to produce similar results.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=15cm]{"../outputs/comparison-shap/figures/boxplots.pdf"}
+    \caption{Boxplots of the absolute difference average of the absolute normalised SHAP values of both methods over
+    the features for each prediction on the training and test set}
+    \label{fig:boxplot}
+\end{figure}
+
+The SHAP values are also used to perform rankings from the most significant variable to the least significant one. 
+It is therefore relevant to count, across the entire prediction set, the number of times the rankings differ.
+More precisely, for each dataset configuration, we rank the absolute values of the normalized SHAP values 
+that are greater than 10\%. We set this threshold to eliminate variables deemed insignificant that may 
+disturb the end of the ranking. Then, we calculate the number of times the rankings differ and divide by the 
+total number of predictions for the training and test sets.
+We report the error rates in table (\ref{table:rankings}). We observe that as the number of categorical 
+features increases, the rankings differ more. In the case of a dataset with many categorical variables, 
+the differences become significant.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cccc}
+      \midrule
+      & 1 categorical feature & 3 categorical features & 5 categorical features \\
+      Training set & 0.05 & 0.15 & 0.25 \\
+      Test set & 0.05 & 0.17 & 0.25 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Number of times the rankings differ divided by the total number of
+     predictions for the training and test sets and given the number of categorical data.}
+    \label{table:rankings}
+  \end{table}
+
 
 \newpage
 \bibliography{bibliography}

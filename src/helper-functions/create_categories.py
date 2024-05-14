@@ -1,11 +1,11 @@
-# Script to generate (randomly or not) categorical features based on numeric features
+# Script to generate (randomly or not) categorical features based on numerical features
 import numpy as np
 def transform_num_to_cat(X, feature_name = None, nb_cat = 2, cat_names = None,  randomness = 0, seed = None):
     """
-    Create array of categories from an array of numeric data.
-    Categories correspond to a breakdown of numerical data arranged in order.
+    Create array of categories from an array of numerical data.
+    Categories correspond to a breakdown of numericalal data arranged in order.
     Randomness controls the error rate.
-    :param X: numerical array to transform.
+    :param X: numericalal array to transform.
     :type X: np.ndarray.
     :param feature_name: feature name.
     :type feature_name: list of str.

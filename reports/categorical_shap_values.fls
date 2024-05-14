@@ -257,6 +257,12 @@ INPUT ..\outputs\plot_tree\figures\path_3_known.pdf
 INPUT ..\outputs\plot_tree\figures\path_3_known.pdf
 INPUT ..\outputs\plot_tree\figures\path_3_known.pdf
 INPUT ..\outputs\plot_tree\figures\path_3_known.pdf
+INPUT ..\outputs\comparison-shap\figures\boxplots.pdf
+INPUT ..\outputs\comparison-shap\figures\boxplots.pdf
+INPUT ..\outputs\comparison-shap\figures\boxplots.pdf
+INPUT ..\outputs\comparison-shap\figures\boxplots.pdf
+INPUT ..\outputs\comparison-shap\figures\boxplots.pdf
+INPUT ..\outputs\comparison-shap\figures\boxplots.pdf
 INPUT .\categorical_shap_values.bbl
 INPUT .\categorical_shap_values.bbl
 INPUT categorical_shap_values.bbl
