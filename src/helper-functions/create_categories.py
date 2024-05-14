@@ -1,8 +1,5 @@
 # Script to generate (randomly or not) categorical features based on numeric features
 import numpy as np
-import sys
-from sklearn.datasets import make_classification
-
 def transform_num_to_cat(X, feature_name = None, nb_cat = 2, cat_names = None,  randomness = 0, seed = None):
     """
     Create array of categories from an array of numeric data.
@@ -71,7 +68,3 @@ def transform_num_to_cat(X, feature_name = None, nb_cat = 2, cat_names = None,  
             return np.vectorize(lambda a: choose_cat(a, proba_cat, cat_names))(X_cat)
         else:
             raise Exception("randomness must be a float in [0,1]")
-        
-X, y = make_classification(n_samples=5000, n_features=20,
-                           n_informative=5, n_redundant=0,
-                           random_state=0, shuffle=False)

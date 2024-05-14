@@ -69,7 +69,7 @@ class tree_cat_explainer:
                     self.feature_groups.append([index_group])
                 elif type(index_group) == list:
                     for ind in index_group:
-                        if type(ind) == int:
+                        if (type(ind) == int) or (type(ind) == np.int32):
                             feature_list.append(ind)
                         else:
                             raise TypeError("feature_groups must contain integers or lists of integers")
@@ -94,11 +94,15 @@ class tree_cat_explainer:
     def shap_values(self, x_input):
         """
         Compute the shap values of an input array
-        :param x: array of inputs of dimension (n,d) where n is the number of inputs
+        :param x_input: array of inputs of dimension (n,d) where n is the number of inputs
         and d the number of features.
-        :type x: np.ndarray, list if a single input
+        :type x_input: pd.DataFrame, np.ndarray or list (only for a single input).
+        :returns: array of Shap values for each feature, each observation.
+        :rtype: np.ndarray.
         """
-        if type(x_input) == list:
+        if str(type(x_input)) == "<class 'pandas.core.frame.DataFrame'>":
+            x_tot = x_input.values
+        elif type(x_input) == list:
             try:
                 x_tot = np.array(x_input)
             except:
@@ -125,7 +129,7 @@ class tree_cat_explainer:
         for ind_tree, tree in enumerate(self.trees):
             for input_index, x in enumerate(x_tot):
                 maxd = tree.max_depth + 2
-                s = (maxd * (maxd + 1)) // 2
+                tot_length = (maxd * (maxd + 1)) // 2
                 node_features = tree.feature
                 children_left = tree.children_left
                 children_right = tree.children_right
@@ -267,10 +271,119 @@ class tree_cat_explainer:
                             l -= 1
                         recurse(h, node_path, iz * node_fraction[h]/node_fraction[j], io, node_features[j], l + 1, j)
                         recurse(c, node_path, iz * node_fraction[c]/node_fraction[j], 0, node_features[j], l + 1, j)
-                recurse(0, {"node -1": {"weight": np.zeros(s),
-                            "zero": np.zeros(s),
-                            "one": np.zeros(s),
-                            "feature": np.zeros(s)}}, 1, 1, -1, l = 0, parent = -1)
+                recurse(0, {"node -1": {"weight": np.zeros(tot_length),
+                            "zero": np.zeros(tot_length),
+                            "one": np.zeros(tot_length),
+                            "feature": np.zeros(tot_length)}}, 1, 1, -1, l = 0, parent = -1)
         if phi.shape[0] == 1:
             return phi[0]
         return phi
+# Sum shap values of encoded data
+def sum_cat_shap(shap_values, feature_groups, n_classes = None):
+    """
+    Sum shap values of encoded categorical variables when shap values have been computed separately.
+    :param shap_values: initial shap values from encoded features
+    :type shap_values: np.ndarray
+    :param feature_groups: list of feature groups where the shap values needs to be summed up.
+    :type feature_groups: list of list of int.
+    :param n_classes: if classification: number of classes.
+    :type n_classes: int.
+    :returns: sum of shap values according to feature_groups.
+    :rtype: np.ndarray
+    """
+    # Get dimension of shap values
+    if n_classes == None: # Regression
+        if len(shap_values.shape) == 2:
+            n_inputs = shap_values.shape[0]
+            n_features = shap_values.shape[1]
+        else:
+            n_inputs = 1
+            n_features = len(shap_values)
+    else:
+        if len(shap_values.shape) == 3:
+            n_inputs = shap_values.shape[0]
+            n_features = shap_values.shape[1]
+        else:
+            n_inputs = 1
+            n_features = len(shap_values)
+    # Check if feature_groups is adapted
+    if type(feature_groups) != list:
+        raise TypeError("feature_groups must be a list, type(feature_groups): " + str(type(feature_groups)))
+    feature_list = []
+    # Check types
+    groups = []
+    for index_group in feature_groups:
+        if type(index_group) == int:
+            feature_list.append(index_group)
+            groups.append([index_group])
+        elif type(index_group) == list:
+            for ind in index_group:
+                if (type(ind) == int) or (type(ind) == np.int32):
+                    feature_list.append(ind)
+                else:
+                    raise TypeError("feature_groups must contain integers or lists of integers:" + str(feature_groups))
+            groups.append(index_group)
+        else:
+            raise TypeError("feature_groups must contain integers or lists of integers" + str(feature_groups))
+    # Check number of features
+    feature_list = list(dict.fromkeys(feature_list))
+    if len(feature_list) != n_features:
+        raise Exception("Wrong number of features in feature_groups:")
+    if (max(feature_list) != n_features - 1) or (min(feature_list) != 0):
+        raise Exception("Wrong feature indices in feature_groups")
+    # Aggregate cat shap values
+    if n_classes == None: # Regression
+        aggregated_shap = np.zeros((n_inputs, len(groups)))
+    else: # Classification
+        aggregated_shap = np.zeros((n_inputs, len(groups), n_classes))
+    for index_group, group in enumerate(groups):
+        for feature_index in group:
+            aggregated_shap[:,index_group] += shap_values[:, feature_index]
+    return aggregated_shap
+# Compute mean absolute shap value for each feature over all the given samples.
+def mean_absolute_shap_value(shap_values, round = 3):
+    """
+    Mean absolute value for an array of shap values for each feature over all the given samples
+    :param shap_values: shap values of samples.
+    :type shap_values: np.ndarray with two dimensions (n_samples x n_features).
+    :param round: number of decimals.
+    :type round: int.
+    :returns: 1d-array of mean absolute values. 
+    :rtype: np.ndarray.
+    """
+    if len(shap_values.shape) != 2:
+        raise Exception("shap_values must be a 2D-array")
+    return abs(shap_values[:,:]).mean(axis = 0).round(round)
+# Bar plot of mean absolute values.
+def bar_plot(shap_values, ax, max_features = 10, feature_names = None):
+    """
+    Create a global feature importance plot by plotting the mean absolute shap value 
+    for each feature over all the given samples.
+    :param shap_values: shap values of samples.
+    :type shap_values: np.ndarray with two dimensions (n_samples x n_features).
+    :param ax: Axes to plot to.
+    :type ax: matplotlib axis.
+    :param max_features: maximum features displayed.
+    :type max_features: int.
+    :param feature_names: feature names.
+    :type feature_names: list.
+    :returns: None.
+    """
+    mean_abs = mean_absolute_shap_value(shap_values)
+    nb_features = min(max_features, shap_values.shape[1])
+    sorted_index = np.argsort(mean_abs)[::-1][:nb_features]
+    sorted_mean_abs = mean_abs[sorted_index]
+    # Add feature names
+    if feature_names == None:
+        selected_features = [f"X_{i}" for i in range(nb_features)]
+    else:
+        selected_features = feature_names[sorted_index]
+    # Plot bars
+    bars = ax.barh(np.arange(nb_features), sorted_mean_abs, align='center', color = "#b2185d")
+    ax.set_yticks(np.arange(nb_features), labels=selected_features)
+    ax.bar_label(bars, sorted_mean_abs, padding = 5, color="#b2185d")
+    ax.invert_yaxis()  # labels read top-to-bottom
+    ax.set_xlabel("mean(|SHAP value|)")
+    ax.set_xlim(right = sorted_mean_abs[0] * 1.1)
+
+    
