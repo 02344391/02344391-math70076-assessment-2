@@ -1,5 +1,5 @@
 # 02344391-math70076-assessment-2
-# Handling of categorical variables for calculating SHAP values in the case of tree-based methods.
+# Comparison of two methods for calculating SHAP values in the case of tree-based methods.
 ## Description
 
 In this project, we focus on the explainability of machine learning models using SHAP values. Specifically, our aim is to compute the SHAP values for tree-based methods and ensemble methods that incorporate categorical features. 
