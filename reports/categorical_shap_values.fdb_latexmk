@@ -1,20 +1,23 @@
 # Fdb version 4
-["bibtex categorical_shap_values"] 1715725920.35642 "categorical_shap_values.aux" "categorical_shap_values.bbl" "categorical_shap_values" 1715725923.18947 0
+["bibtex categorical_shap_values"] 1715740631.5509 "categorical_shap_values.aux" "categorical_shap_values.bbl" "categorical_shap_values" 1715740680.26043 0
   "./bibliography.bib" 1715535367 787 e5ef81c1884ee05a5203a598666399f8 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/bibtex/bst/natbib/abbrvnat.bst" 1284455456 26532 66bed5cc59495faaa3f9ae9af9fa5e42 ""
-  "categorical_shap_values.aux" 1715725922 4584 486050cee177d39a0ef525b9ac6918c9 "pdflatex"
+  "categorical_shap_values.aux" 1715740679 5854 de6c1ea0042cc720f19952534dfd4c77 "pdflatex"
   (generated)
   "categorical_shap_values.bbl"
   "categorical_shap_values.blg"
   (rewritten before read)
-["pdflatex"] 1715725920.75908 "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" "categorical_shap_values.pdf" "categorical_shap_values" 1715725923.19129 0
-  "../outputs/comparison-shap/figures/boxplots.pdf" 1715725215 68730 77a229ba0a59b82da20af5768ec969bd ""
-  "../outputs/plot_tree/figures/path_0_known.pdf" 1715725212 14184 111cb03ac655a2cd2f5678cfc1560fb5 ""
-  "../outputs/plot_tree/figures/path_1_known.pdf" 1715725212 16835 d58682147ca6444f166f0650e65003ff ""
-  "../outputs/plot_tree/figures/path_2_known.pdf" 1715725212 16796 568169ad671c99ef9d240398efb1abd0 ""
-  "../outputs/plot_tree/figures/path_3_known.pdf" 1715725212 14308 574615835b239157039759174cce4e98 ""
+["pdflatex"] 1715740677.83283 "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" "categorical_shap_values.pdf" "categorical_shap_values" 1715740680.26138 0
+  "../outputs/comparison-shap/figures/boxplots.pdf" 1715739303 68730 55fd6336bf7a5c4c59e9c4c24139c2f5 ""
+  "../outputs/comparison-shap/figures/titanic_importances.pdf" 1715739303 18064 20a00f68e31821f3e9c20c97b4442ced ""
+  "../outputs/plot_tree/figures/path_0_known.pdf" 1715739301 14184 c20463c0dca257a6cc8f9685ad5f3cbc ""
+  "../outputs/plot_tree/figures/path_1_known.pdf" 1715739301 16835 59ddfd87ccea0ea4327ab13196d6fc74 ""
+  "../outputs/plot_tree/figures/path_2_known.pdf" 1715739301 16796 8dfd5fd6c29f8a18ee0e4cf184b699c4 ""
+  "../outputs/plot_tree/figures/path_3_known.pdf" 1715739301 14308 02d16ed2d9fadd0e1c14d9e100cc0566 ""
   "C:/Users/quent/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1710018939 278015 b5ae8789d05c9394f564dcef5be6e51a ""
   "C:/Users/quent/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1706523915 24175184 e58035b8cd87e14ca5d45a178ad8a3fb ""
+  "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1001775420 2900 1537cc8184ad1792082cd229ecc269f4 ""
+  "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/tcrm1095.tfm" 993062508 1460 8005ce585ff351dff78998923504da5e ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm" 1233951848 1124 14ccf5552bc7f77ca02a8a402bea8bfb ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmbsy8.tfm" 1233951848 1120 200be8b775682cdf80acad4be5ef57e4 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
@@ -60,6 +63,7 @@
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1247596667 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb" 1247596667 31099 342ef5a582aacbd3346f3cf4579679fa ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1247596673 34694 870c211f62cb72718a00e353f14f254d ""
+  "C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1095.pfb" 1215618300 145929 5c9aebea9ba6e33fc93158c04a3bdcd8 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/context/base/mkii/supp-pdf.mkii" 1580390158 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/generic/atbegshi/atbegshi.sty" 1575571100 24708 5584a51a7101caf7e6bbf1fc27d8f7b1 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/generic/bigintcalc/bigintcalc.sty" 1576433602 40635 c40361e206be584d448876bba8a64a3b ""
@@ -142,11 +146,11 @@
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/latex/tools/verbatim.sty" 1686255640 7392 ed69c044ab18d5539723c1c7b8c2ee88 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/quent/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1656236890 56148 51a9a8571c07b9921892ae11063ae853 ""
-  "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" 1715725916 13470 27dc3845fd375a28f466611a617f04be ""
-  "categorical_shap_values.aux" 1715725922 4584 486050cee177d39a0ef525b9ac6918c9 "pdflatex"
-  "categorical_shap_values.bbl" 1715725920 1071 12aa4c531041fb79e818be88ac8a2292 "bibtex categorical_shap_values"
-  "categorical_shap_values.out" 1715725921 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "categorical_shap_values.tex" 1715725916 13470 27dc3845fd375a28f466611a617f04be ""
+  "c:/Users/quent/Desktop/Msc Data Science/Spring term/Data Science/Coursework 2/02344391-math70076-assessment-2/reports/categorical_shap_values.tex" 1715740677 16693 6b3786b6b95ea1ede9e700812968d203 ""
+  "categorical_shap_values.aux" 1715740679 5854 de6c1ea0042cc720f19952534dfd4c77 "pdflatex"
+  "categorical_shap_values.bbl" 1715740631 1071 12aa4c531041fb79e818be88ac8a2292 "bibtex categorical_shap_values"
+  "categorical_shap_values.out" 1715740678 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "categorical_shap_values.tex" 1715740677 16693 6b3786b6b95ea1ede9e700812968d203 ""
   (generated)
   "categorical_shap_values.aux"
   "categorical_shap_values.log"

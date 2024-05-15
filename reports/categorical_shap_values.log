@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2024.1.29)  14 MAY 2024 23:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2024.1.29)  15 MAY 2024 03:37
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -585,7 +585,13 @@ File: ../outputs/comparison-shap/figures/boxplots.pdf Graphic file (type pdf)
 <use ../outputs/comparison-shap/figures/boxplots.pdf>
 Package pdftex.def Info: ../outputs/comparison-shap/figures/boxplots.pdf  used on input line 238.
 (pdftex.def)             Requested size: 355.65892pt x 426.79134pt.
- [5] [6 <../outputs/comparison-shap/figures/boxplots.pdf>] (categorical_shap_values.bbl) [7] (categorical_shap_values.aux)
+ [5] [6 <../outputs/comparison-shap/figures/boxplots.pdf>]
+<../outputs/comparison-shap/figures/titanic_importances.pdf, id=419, 722.7pt x 722.7pt>
+File: ../outputs/comparison-shap/figures/titanic_importances.pdf Graphic file (type pdf)
+<use ../outputs/comparison-shap/figures/titanic_importances.pdf>
+Package pdftex.def Info: ../outputs/comparison-shap/figures/titanic_importances.pdf  used on input line 306.
+(pdftex.def)             Requested size: 426.79732pt x 426.79134pt.
+ [7{C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] [8 <../outputs/comparison-shap/figures/titanic_importances.pdf>] [9] (categorical_shap_values.bbl) [10] (categorical_shap_values.aux)
  ***********
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-10>
@@ -594,17 +600,17 @@ Package rerunfilecheck Info: File `categorical_shap_values.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 15774 strings out of 474824
- 249301 string characters out of 5750977
+ 15798 strings out of 474824
+ 250110 string characters out of 5750977
  1936043 words of memory out of 5000000
- 37471 multiletter control sequences out of 15000+600000
- 569370 words of font info for 77 fonts, out of 8000000 for 9000
+ 37486 multiletter control sequences out of 15000+600000
+ 569711 words of font info for 78 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,680b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on categorical_shap_values.pdf (7 pages, 315724 bytes).
+ 75i,12n,79p,680b,472s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/quent/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1095.pfb>
+Output written on categorical_shap_values.pdf (10 pages, 349769 bytes).
 PDF statistics:
- 487 PDF objects out of 1000 (max. 8388607)
- 22 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 563 PDF objects out of 1000 (max. 8388607)
+ 29 named destinations out of 1000 (max. 500000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

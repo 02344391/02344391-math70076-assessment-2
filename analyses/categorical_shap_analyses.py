@@ -1,10 +1,15 @@
 """
 In this script, we compare different approaches to calculating SHAP values for 
 categorical data. The first part illustrates the difference in results with a 
-very simple example. The second part calculates SHAP values for different dataset 
+very simple example. 
+The second part calculates SHAP values for different dataset 
 configurations for binary classification or regression. The results or saved in
 outputs/comparison-shap/data because the algorithm is slow: tree_cat_explainer 
 is not optimised (coded in Python instead of C++).
+The final part conducts the analysis of SHAP values on the Titanic survivors dataset.
+
+To better understand the various elements of the script, it is advisable to first read 
+the PDF report in the reports folder.
 """
 
 # Import modules and functions
@@ -257,9 +262,9 @@ for order, res in enumerate([(results_1, 1), (results_3, 3), (results_5, 5)]):
         significant_shap_train = np.select(condition_10_percent_train,
                                           choice_10_percent_train,
                                           0)
-        order_shap_cat_train = np.argsort(significant_shap_cat_train, axis = 1)
-        order_shap_train = np.argsort(significant_shap_train, axis = 1)
-        diff_ranking_count_train += (abs(order_shap_cat_train - order_shap_train).max(axis = 1) != 0).sum()
+        rank_shap_cat_train = np.argsort(significant_shap_cat_train, axis = 1)
+        rank_shap_train = np.argsort(significant_shap_train, axis = 1)
+        diff_ranking_count_train += (abs(rank_shap_cat_train - rank_shap_train).max(axis = 1) != 0).sum()
         # Test set
         norm_abs_shap_cat_test = tree_shap.normalise_absolute_shap_value(res[0][f"iteration {iteration}"]["shap_cat_classif_test"])
         norm_abs_shap_test = tree_shap.normalise_absolute_shap_value(res[0][f"iteration {iteration}"]["shap_classif_test"])
@@ -275,9 +280,9 @@ for order, res in enumerate([(results_1, 1), (results_3, 3), (results_5, 5)]):
         significant_shap_test = np.select(condition_10_percent_test,
                                           choice_10_percent_test,
                                           0)
-        order_shap_cat_test = np.argsort(significant_shap_cat_test, axis = 1)
-        order_shap_test = np.argsort(significant_shap_test, axis = 1)
-        diff_ranking_count_test += (abs(order_shap_cat_test - order_shap_test).max(axis = 1) != 0).sum()
+        rank_shap_cat_test = np.argsort(significant_shap_cat_test, axis = 1)
+        rank_shap_test = np.argsort(significant_shap_test, axis = 1)
+        diff_ranking_count_test += (abs(rank_shap_cat_test - rank_shap_test).max(axis = 1) != 0).sum()
         # Update boxplot
         boxplot_array_train[:, iteration] = abs(norm_abs_shap_cat_train - norm_abs_shap_train).mean(axis = 1)
         boxplot_array_test[:, iteration] = abs(norm_abs_shap_cat_test - norm_abs_shap_test).mean(axis = 1) 
@@ -328,3 +333,123 @@ Difference in the ranking of the absolute values of the SHAP values when they ar
 - Trainning set 5 categories (error rate): 0.2529166666666667
 - Test set 5 categories (error rate): 0.24916666666666668
 """
+
+###############################################################################
+# Titanic dataset
+###############################################################################
+import os
+
+
+# import and save raw data
+titanic_path = os.path.abspath("../data/derived/titanic_cleaned.csv")
+titanic = pd.read_csv(titanic_path)
+titanic_train, titanic_test, surviv_train, surviv_test = train_test_split(titanic[titanic.columns[1:]], 
+                                                                       titanic["survived"], 
+                                                                       test_size=0.2, 
+                                                                       random_state=seed)
+# Get feature names
+titanic_feature_names = ["adult_male", 
+                         "age", 
+                         "sibsp", 
+                         "parch",
+                         "fare",
+                         "pclass",
+                         "embarked"]
+# Get feature groups
+titanic_feature_groups = [0, 1, 2, 3, 4, [5,6], [7,8]]
+# Construct model
+titanic_model = RandomForestClassifier(n_estimators=20, # limit the number of estimators (slow algorithm)
+                                    random_state= seed)
+titanic_model.fit(titanic_train, surviv_train)
+print("Scores Titanic on test set:")
+print(f"- Accuracy: {accuracy_score(titanic_model.predict(titanic_test), surviv_test)}")
+print(f"- Precision: {precision_score(titanic_model.predict(titanic_test), surviv_test)}")
+print(f"- Recall: {recall_score(titanic_model.predict(titanic_test), surviv_test)}")
+"""
+Scores Titanic on test set:
+- Accuracy: 0.8531468531468531
+- Precision: 0.8
+- Recall: 0.75
+"""
+path_titanic_pkl = os.path.abspath(path_folder + f"titanic.pkl")
+# Check if file already exists
+if os.path.exists(path_titanic_pkl):
+        with open(path_titanic_pkl, 'rb') as f:
+            results_titanic = pickle.load(f)
+else:
+    results_titanic = {}
+    # Explainer shap
+    explain_titanic_shap = shap.TreeExplainer(titanic_model)
+    shap_titanic_train = explain_titanic_shap.shap_values(titanic_train)
+    shap_titanic_test = explain_titanic_shap.shap_values(titanic_test)
+    # Update results shap
+    results_titanic["shap_titanic_train"] = tree_shap.sum_cat_shap(shap_titanic_train, 
+                                                           titanic_feature_groups, 
+                                                           n_classes=2)[:,:,0]
+    results_titanic["shap_titanic_test"] = tree_shap.sum_cat_shap(shap_titanic_test, 
+                                                          titanic_feature_groups, 
+                                                          n_classes=2)[:,:,0]
+    # Explainer Shap Cat
+    explain_titanic_cat_shap = tree_shap.tree_cat_explainer(titanic_model, 
+                                                            feature_groups = titanic_feature_groups)
+    # Update results shap cat
+    results_titanic["shap_cat_titanic_train"] = explain_titanic_cat_shap.shap_values(titanic_train)[:,:,0]
+    results_titanic["shap_cat_titanic_test"] = explain_titanic_cat_shap.shap_values(titanic_test)[:,:,0]
+    # Save results: slow algorithm
+    with open(path_titanic_pkl, 'wb') as f:
+        pickle.dump(results_titanic, f)
+# Importance plot of absolute values of normalised shap values
+fig, ax_importance = plt.subplots(2, 2, figsize = (10,10))
+norm_shap_titanic_train = tree_shap.normalise_absolute_shap_value(results_titanic["shap_titanic_train"])
+norm_shap_titanic_test =tree_shap.normalise_absolute_shap_value(results_titanic["shap_titanic_test"])
+norm_shap_cat_titanic_train = tree_shap.normalise_absolute_shap_value(results_titanic["shap_cat_titanic_train"])
+norm_shap_cat_titanic_test = tree_shap.normalise_absolute_shap_value(results_titanic["shap_cat_titanic_test"])
+tree_shap.bar_plot(norm_shap_titanic_train, 
+                   ax = ax_importance[0,0], 
+                   feature_names = titanic_feature_names,
+                   title = "Importances on the training set \n(summing the SHAP values of the encoded variables)")
+tree_shap.bar_plot(norm_shap_cat_titanic_train, 
+                   ax = ax_importance[0,1], 
+                   feature_names = titanic_feature_names,
+                   title = "Importances on the training set \n(SHAP values of the encoded variables as a whole)")
+tree_shap.bar_plot(norm_shap_titanic_test, 
+                   ax = ax_importance[1,0], 
+                   feature_names = titanic_feature_names,
+                   title = "Importances on the test set \n(summing the SHAP values of the encoded variables)")
+tree_shap.bar_plot(norm_shap_cat_titanic_test, 
+                   ax = ax_importance[1,1], 
+                   feature_names = titanic_feature_names,
+                   title = "Importances on the test set \n(SHAP values of the encoded variables as a whole)")
+plt.tight_layout()
+plt.savefig(os.path.abspath("../outputs/comparison-shap/figures/titanic_importances.pdf"))
+
+# Analyse rankings of shap values 
+condition_10_percent_train = [norm_shap_titanic_train > 0.1]
+choice_10_percent_train = [norm_shap_titanic_train]
+significant_shap_train = np.select(condition_10_percent_train,
+                                   choice_10_percent_train,
+                                   0)
+condition_10_percent_cat_train = [norm_shap_cat_titanic_train > 0.1]
+choice_10_percent_cat_train = [norm_shap_cat_titanic_train]
+significant_shap_cat_train = np.select(condition_10_percent_cat_train,
+                                       choice_10_percent_cat_train,
+                                       0)
+condition_10_percent_test = [norm_shap_titanic_test > 0.1]
+choice_10_percent_test = [norm_shap_titanic_test]
+significant_shap_test = np.select(condition_10_percent_test,
+                                  choice_10_percent_test,
+                                  0)
+condition_10_percent_cat_test = [norm_shap_cat_titanic_test > 0.1]
+choice_10_percent_cat_test = [norm_shap_cat_titanic_test]
+significant_shap_cat_test = np.select(condition_10_percent_cat_test,
+                                      choice_10_percent_cat_test,
+                                      0)
+rank_shap_cat_titanic_train = np.argsort(significant_shap_train, axis = 1)
+rank_shap_titanic_train = np.argsort(significant_shap_cat_train, axis = 1)
+rank_shap_cat_titanic_test = np.argsort(significant_shap_test, axis = 1)
+rank_shap_titanic_test = np.argsort(significant_shap_cat_test, axis = 1)
+diff_ranking_count_titanic_train = (abs(rank_shap_cat_titanic_train - rank_shap_titanic_train).max(axis = 1) != 0).sum()
+diff_ranking_count_titanic_test = (abs(rank_shap_cat_titanic_test - rank_shap_titanic_test).max(axis = 1) != 0).sum()
+
+print(diff_ranking_count_titanic_train/len(titanic_train))
+print(diff_ranking_count_titanic_test/len(titanic_test))

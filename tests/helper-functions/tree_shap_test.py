@@ -17,6 +17,7 @@ from sklearn.datasets import make_classification
 sys.path.append(os.path.abspath("../../src/helper-functions"))
 import tree_shap
 
+## Test tree_cat_explainer
 # Create dataset with categorical data for regression
 target = [-10] * 10 + [10] * 5 + [5] * 20 + [14] * 5
 cat_1 = [1] * 10 + [0] * 30
@@ -53,3 +54,16 @@ np.testing.assert_allclose(tree_shap.tree_cat_explainer(rf_classif).shap_values(
                            shap.TreeExplainer(rf_classif).shap_values(input_classif),
                            rtol = 1e-12)
 print("ok classification")
+# Test sum_cat_shap
+np.testing.assert_allclose(tree_shap.sum_cat_shap(tree_shap.tree_cat_explainer(reg_tree).shap_values(input_reg),
+                           feature_groups = [[0,1], 2]),
+                           np.array([[191/36 + 25/18, 155/36],
+                                     [-583/48 - 1/3,  -25/48]]))
+print("ok sum")
+
+# Test normalise_absolute_shap_value(shap_values, n_decimals = 3)
+np.testing.assert_allclose(tree_shap.normalise_absolute_shap_value(tree_shap.tree_cat_explainer(reg_tree).shap_values(input_reg),
+                           n_decimals = 4),
+                           np.array([[0.4823, 0.1263, 0.3914],
+                                     [0.9343, 0.0256, 0.0401]]))
+print("ok normalise")

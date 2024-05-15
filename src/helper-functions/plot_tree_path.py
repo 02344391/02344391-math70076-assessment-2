@@ -53,13 +53,13 @@ def plot_tree_color(ax, tree, x_input, feature_names, known_features, title = Tr
         if lefts[node_index] != -1:
             # remove value in text if internal
             plot[node_index].set_text(plot[node_index].get_text().split("value")[0][:-1])
-            if int(features[node_index]) in known_features:
+            if int(features[node_index]) in known_features: # Check if the feature is known
                 if x_input[int(features[node_index])] <= thresholds[node_index]:
                     colour_node(lefts[node_index], colour_index)
                 else:
                     colour_node(rights[node_index], colour_index)
             else:
-                colour_index +=1
+                colour_index +=1 # Change colour shade
                 colour_node(rights[node_index], min(colour_index, len(color_list) + 1))
                 colour_node(lefts[node_index], min(colour_index, len(color_list) + 1))
     colour_node(0, 0)

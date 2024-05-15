@@ -354,9 +354,8 @@ def normalise_absolute_shap_value(shap_values, n_decimals = 3):
     if len(shap_values.shape) != 2:
         raise Exception("shap_values must be a 2D-array")
     return ((abs(shap_values).T/abs(shap_values).sum(axis = 1)).T).round(n_decimals)
-
-# Bar plot of mean values.
-def bar_plot(abs_shap_values, ax, max_features = 10, feature_names = None, n_decimals = 3):
+# Bar plot of shap values.
+def bar_plot(abs_shap_values, ax, max_features = 10, feature_names = None, title = None, n_decimals = 3):
     """
     Create a global feature importance plot by plotting the mean value
     for each feature over all the given samples.
@@ -368,11 +367,13 @@ def bar_plot(abs_shap_values, ax, max_features = 10, feature_names = None, n_dec
     :type max_features: int.
     :param feature_names: feature names.
     :type feature_names: list.
+    :param title: plot title.
+    :type title: str.
     :param n_decimals: number of decimals.
     :type n_decimals: int.
     :returns: None.
     """
-    mean_shap = abs_shap_values.mean(axis = 1).round(n_decimals)
+    mean_shap = abs_shap_values.mean(axis = 0).round(n_decimals)
     nb_features = min(max_features, abs_shap_values.shape[1])
     sorted_index = np.argsort(mean_shap)[::-1][:nb_features]
     sorted_mean = mean_shap[sorted_index]
@@ -380,11 +381,13 @@ def bar_plot(abs_shap_values, ax, max_features = 10, feature_names = None, n_dec
     if feature_names == None:
         selected_features = [f"X_{i}" for i in range(nb_features)]
     else:
-        selected_features = feature_names[sorted_index]
+        selected_features = [feature_names[ind] for ind in sorted_index]
     # Plot bars
     bars = ax.barh(np.arange(nb_features), sorted_mean, align='center', color = "#b2185d")
     ax.set_yticks(np.arange(nb_features), labels=selected_features)
     ax.bar_label(bars, sorted_mean, padding = 5, color="#b2185d")
     ax.invert_yaxis()  # labels read top-to-bottom
     ax.set_xlabel("mean(|SHAP value|)")
-    ax.set_xlim(right = sorted_mean[0] * 1.1)
+    ax.set_xlim(right = sorted_mean[0] * 1.2)
+    if title != None:
+        ax.set_title(title)

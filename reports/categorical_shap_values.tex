@@ -265,6 +265,74 @@ the differences become significant.
     \label{table:rankings}
   \end{table}
 
+Now, we test the two methods on a real dataset: the Titanic survivors. We import the data 
+using the seaborn module. In this dataset, we consider the following features as numerical: 
+\begin{itemize}
+    \item age;
+    \item sibsp (number of siblings / spouses aboard the Titanic);
+    \item parch (number of parents / children aboard the Titanic);
+    \item fare.
+\end{itemize}
+The categorical features are:
+\begin{itemize}
+    \item pclass (1, 2, 3);
+    \item adult\_male (0, 1); 
+    \item embarked (Port of Embarkation: Cherbourg, Queenstown, Southampton).
+\end{itemize}
+
+Only the features \textit{pclass} and \textit{embarked} need to be encoded as they have three categories.
+A random forest model is trained to predict whether a passenger survived or not. The training set 
+comprises 569 observations. The prediction scores on the test set are reported in \ref{table:score_titanic}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+      \midrule
+      Accuracy & Precision & Recall \\
+      0.85 & 0.8 & 0.75 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Prediction scores of the model on the test set (143 observations).}
+    \label{table:score_titanic}
+  \end{table}
+The scores are acceptable; we can now analyse the SHAP values.
+
+First, figure (\ref{fig:importances_shap}) shows the importances calculated from the SHAP values:
+the averages of the normalised absolute values of the SHAP values across all observations 
+in the considered set for each feature.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=15cm]{"../outputs/comparison-shap/figures/titanic_importances.pdf"}
+    \caption{Averages of the normalised absolute values of the SHAP values across all observations 
+    for each feature in the test set, training set and computed by the two methods.}
+    \label{fig:importances_shap}
+\end{figure}
+
+Again, we calculate the number of times the rankings differ between the two methods and with normalised
+absolute SHAP values greater than 10\%. We report the error rates in table (\ref{table:rankings_titanic}). 
+Observing table (\ref{table:rankings_titanic}) and figure (\ref{fig:importances_shap}), we can conclude 
+that the two methods  yield similar results regarding the SHAP values. In the case of this dataset, there 
+does not seem to be a problem with summing the SHAP values of the encoded sub-variables and calculated
+separately.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+      \midrule
+      Training set & Test set \\
+      0.12 &  0.06 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Number of times the rankings differ divided by the total number of
+    predictions for the training and test sets of the Titanic dataset.}
+    \label{table:rankings_titanic}
+\end{table}
+
+\section*{Conclusion}
+Summing the SHAP values of the encoded sub-variables and calculated separately should not be problematic 
+when categorical variables are in the minority. However, more caution should be exercised when they 
+constitute the majority of the dataset. Additionally, we have not tested categorical variables with a large 
+number of categories, which could lead to significant differences.
 
 \newpage
 \bibliography{bibliography}
